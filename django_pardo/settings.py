@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +21,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-qdso)z#vjg)i@oyiryz!$$be^4!f2qjc16_c^@d)d0q$s=(9vc'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = str(os.environ.get('DEBUG')) == "1" # 1 == True
 
+ENV_ALLOWED_HOST = os.environ.get('DJANGO_ALLOWED_HOST') or None
 ALLOWED_HOSTS = []
+if ENV_ALLOWED_HOST is not None:
+    ALLOWED_HOSTS = [ ENV_ALLOWED_HOST ]
 
 
 # Application definition
@@ -37,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'vocab.apps.VocabConfig',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +60,7 @@ ROOT_URLCONF = 'django_pardo.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -73,12 +79,31 @@ WSGI_APPLICATION = 'django_pardo.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+MYSQL_DB=os.environ.get('MYSQL_DB')
+MYSQL_USER=os.environ.get('MYSQL_USER')
+MYSQL_PASSWORD=os.environ.get('MYSQL_PASSWORD')
+MYSQL_PORT=os.environ.get('MYSQL_PORT')
+MYSQL_HOST=os.environ.get('MYSQL_HOST')
+
+MYSQL_READY = (
+    MYSQL_DB is not None
+    and MYSQL_PASSWORD is not None
+    and MYSQL_USER is not None
+    and MYSQL_PORT is not None
+    and MYSQL_HOST is not None
+)
+
+if MYSQL_READY:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": MYSQL_DB,
+            "USER": MYSQL_USER,
+            "PASSWORD": MYSQL_PASSWORD,
+            "PORT": MYSQL_PORT,
+            "HOST": MYSQL_HOST,
+        }
     }
-}
 
 
 # Password validation
@@ -117,6 +142,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 

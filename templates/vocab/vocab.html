@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>
+{% extends 'vocab/main.html' %}
+{% block content %}
+
+<p>
+    <a id="add-link" href="{% url 'word-create' %}">Add</a>
+</p>
+
+<ul>
+    {% for word in vocab %}
+    <li>
+    <input type="checkbox" name="status" id="status" {% if word.learned %} checked {% endif %}>
+    <label for="word">
+        {{word}}
+        <a href="{% url 'word' word.id %}">View</a>
+        <a href="{% url 'word-update' word.id %}">Update</a>
+        <a href="{% url 'word-delete' word.id %}">Delete</a>
+    </label>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock content %}

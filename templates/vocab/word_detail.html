@@ -1,0 +1,11 @@
+{% extends 'vocab/main.html' %}
+{% block content %} 
+    <p>{{word}}</p>
+
+    {% if word.learned %}
+    <p>Word is learned</p>
+    {% else %}
+    <p>Word is NOT learned</p>
+    {% endif %}
+
+{% endblock content %}
