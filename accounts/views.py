@@ -46,4 +46,4 @@ class PasswordChange(PasswordChangeView):
 
 class PasswordChangeDone(PasswordChangeDoneView):
     template_name = 'accounts/change_password_done.html'
-    success_url = reverse_lazy('/')
+    success_url = reverse_lazy('vocab')
