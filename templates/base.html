@@ -11,15 +11,12 @@
 
 
         <script src="https://unpkg.com/htmx.org@1.5.0"></script>
-        <link rel='stylesheet' href='{% static "vocab/style.css" %}' />
+        <!-- <link rel='stylesheet' href='{% static "vocab/style.css" %}' /> -->
     </head>
     <body>
         
         <div class='container'>
-            
-            {% block content %}
-            <h3>This will be replaced</h3>
-            {% endblock content %}
+            {% block content %}{% endblock content %}
         </div>
 
         
