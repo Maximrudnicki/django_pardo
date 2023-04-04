@@ -1,0 +1,22 @@
+{% extends 'vocab/main.html' %}
+
+{% block content %}
+  <a href="{% url 'vocab' %}">&#8592; Back</a>
+  <h1>Search Words</h1>
+  <form method="GET">
+    <input type="text" name="q" placeholder="Search...">
+    <button type="submit">Search</button>
+  </form>
+  <hr>
+  <h2>Results:</h2>
+  <ul>
+    {% for word in vocab %}
+      <li>
+        {{ word }}
+        <a href="{% url 'word' word.id %}">View</a>
+      </li>
+    {% empty %}
+      <li>No results found.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

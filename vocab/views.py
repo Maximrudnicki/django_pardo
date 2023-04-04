@@ -9,18 +9,30 @@ from .models import Word
 from .mixins import WordAccessMixin
 
 
-class WordList(WordAccessMixin, ListView):
+class WordListView(WordAccessMixin, ListView):
     model = Word
     context_object_name = 'vocab'
     template_name = 'vocab/vocab.html'
 
 
-class WordDetail(WordAccessMixin, DetailView):
+class WordSearchView(WordAccessMixin, ListView):
+    context_object_name = 'vocab'
+    template_name = 'vocab/word_search.html'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Word.objects.by_user(self.request.user).filter(word__icontains=query)
+        else:
+            return Word.objects.none()
+
+
+class WordDetailView(WordAccessMixin, DetailView):  
     model = Word
     context_object_name = 'word'
 
 
-class WordCreate(WordAccessMixin, CreateView):
+class WordCreateView(WordAccessMixin, CreateView):
     model = Word
     fields = ('word', 'definition', 'learned')
     success_url = reverse_lazy('vocab')
@@ -30,7 +42,7 @@ class WordCreate(WordAccessMixin, CreateView):
         return super().form_valid(form)
 
 
-class WordUpdate(WordAccessMixin, UpdateView):
+class WordUpdateView(WordAccessMixin, UpdateView):
     model = Word
     fields = ('word', 'definition', 'learned')
     success_url = reverse_lazy('vocab')
@@ -40,7 +52,7 @@ class WordUpdate(WordAccessMixin, UpdateView):
         return super().form_valid(form)
 
 
-class WordDelete(WordAccessMixin, DeleteView):
+class WordDeleteView(WordAccessMixin, DeleteView):
     model = Word
     context_object_name = 'word'
     success_url = reverse_lazy('vocab')
