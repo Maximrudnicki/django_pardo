@@ -70,6 +70,20 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8082",
 ]
 
+CORS_ALLOW_HEADERS = [
+    'username',  # добавьте свои дополнительные заголовки здесь
+    'password',  # добавьте свои дополнительные заголовки здесь
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',  
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -165,18 +179,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.SessionAuthentication",
+        # "rest_framework.authentication.SessionAuthentication",
         # "accounts.authentication.TokenAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
-    # "DEFAULT_PERMISSION_CLASSES": [
-    #     "rest_framework.permissions.IsAuthenticatedOrReadOnly",
-    # ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+    ],
 }
 
 SIMPLE_JWT = {
-    "AUTH_HEADER_TYPES": ["JWT"],
-    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(days=7), # minutes=5
-    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=60), # days=1
+    "AUTH_HEADER_TYPES": ["Token"],
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(days=7), 
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=60),
 }
 
