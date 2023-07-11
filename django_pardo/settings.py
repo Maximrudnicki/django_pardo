@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'djoser',
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
@@ -68,11 +69,14 @@ ROOT_URLCONF = 'django_pardo.urls'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8082",
+    "http://127.0.0.1:8082",
+    "http://localhost:8083",
+    "http://127.0.0.1:8083",
 ]
 
 CORS_ALLOW_HEADERS = [
-    'username',  # добавьте свои дополнительные заголовки здесь
-    'password',  # добавьте свои дополнительные заголовки здесь
+    'username',
+    'password',
     'accept',
     'accept-encoding',
     'authorization',
@@ -179,7 +183,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        # "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
         # "accounts.authentication.TokenAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
@@ -189,8 +193,18 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "AUTH_HEADER_TYPES": ["Token"],
+    # "AUTH_HEADER_TYPES": ("Token",),
     "ACCESS_TOKEN_LIFETIME": datetime.timedelta(days=7), 
     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=60),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
 }
 
